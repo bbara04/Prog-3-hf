@@ -23,9 +23,9 @@ public class GamePanel extends JPanel{
         return game;
     }
 
-    public void paint(Graphics g){
+    public void paintComponent(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
-        super.paint(g);
+        super.paintComponent(g);
 
         g2d.setColor(Color.BLACK);
         g2d.setStroke(new BasicStroke(2));
