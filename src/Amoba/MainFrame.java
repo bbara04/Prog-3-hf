@@ -2,19 +2,31 @@ package Amoba;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
-public class MainFrame extends JFrame{
+public class MainFrame extends JFrame {
     private HomePagePanel homePagePanel;
     private JPanel frame;
     private GamePanel gamePanel;
     private MenuPanel menuPanel;
     public SerializationUtil serializationUtil;
-    MainFrame(){
+
+    MainFrame() {
         super();
         homePagePanel = new HomePagePanel();
         add(homePagePanel);
-        homePagePanel.getButton().addActionListener(x -> {
+        homePagePanel.getNewGameButton().addActionListener(x -> {
             this.getContentPane().removeAll();
+            this.add(frame);
+            revalidate();
+        });
+        homePagePanel.getLoadGameButton().addActionListener(x -> {
+            this.getContentPane().removeAll();
+            try {
+                serializationUtil.load("game1.txt");
+            } catch (IOException e) {
+            } catch (ClassNotFoundException e) {
+            }
             this.add(frame);
             revalidate();
         });
@@ -42,8 +54,8 @@ public class MainFrame extends JFrame{
         menuPanel.setSerializationUtil(serializationUtil);
         frame.add(menuPanel, BorderLayout.EAST);
     }
+
     public static void main(String[] args) {
         MainFrame frame = new MainFrame();
     }
-
 }
