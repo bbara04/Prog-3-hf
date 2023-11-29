@@ -8,6 +8,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * A játék megkezdése előtti kezdőpanel.
+ * @author Balogh Barnabás
+ */
 public class HomePagePanel extends JPanel {
     private JButton button1;
     private JButton button2;
@@ -47,12 +51,27 @@ public class HomePagePanel extends JPanel {
         button3.addActionListener(x -> System.exit(0));
         add(button3);
     }
+
+    /**
+     * A panelre kirajzolt elemekért felelős függvény jelen esetben a háttér kirajzolásáért.
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     public void paintComponent(Graphics g){
         g.drawImage(bg, 0, 0, this);
     }
+
+    /**
+     * NewGameButton getter-e.
+     * @return
+     */
     public JButton getNewGameButton(){
         return button1;
     }
+
+    /**
+     * LoadGameButton getter-e.
+     * @return
+     */
     public JButton getLoadGameButton(){ return button2; }
 }

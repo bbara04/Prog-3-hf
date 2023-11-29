@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * A fő panel. Ez tárolja a program által használt paneleket. Ez végzi a panelek cseréjét is.
+ * @author Balogh Barnabás
+ */
 public class MainFrame extends JFrame {
     private HomePagePanel homePagePanel;
     private JPanel frame;
@@ -24,8 +28,8 @@ public class MainFrame extends JFrame {
             this.getContentPane().removeAll();
             try {
                 serializationUtil.load("game.txt");
-            } catch (IOException e) {
-            } catch (ClassNotFoundException e) {
+            } catch (Exception e) {
+                System.out.println("A megadott fileból nem lehet beolvasni.");
             }
             this.add(frame);
             revalidate();
@@ -52,11 +56,6 @@ public class MainFrame extends JFrame {
         menuPanel = new MenuPanel();
         menuPanel.setSerializationUtil(serializationUtil);
         frame.add(menuPanel, BorderLayout.EAST);
-    }
-    public void changeToGameFrame(){
-        this.getContentPane().removeAll();
-        this.add(frame);
-        revalidate();
     }
 
     public static void main(String[] args) {

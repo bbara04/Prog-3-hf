@@ -8,6 +8,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * A játék panel mellett megjelenő menűpanel a játék kezdőhelyzetbe, mentésére, betölrésére és kilépésére szolgálő menűpanel.
+ * @author Balogh Barnabás
+ */
 public class MenuPanel extends JPanel {
     private JButton button1;
     private JButton button2;
@@ -63,17 +67,38 @@ public class MenuPanel extends JPanel {
         add(button4);
     }
 
+    /**
+     * SerializationUtil setter-e.
+     * @param serializationUtil
+     */
     public void setSerializationUtil(SerializationUtil serializationUtil) {
         this.serializationUtil = serializationUtil;
     }
 
+    /**
+     * SerializationUtil getter-e.
+     * @return
+     */
     public SerializationUtil getSerializationUtil() {
         return serializationUtil;
     }
+
+    /**
+     * A panelre kirajzolt elemekért felelős függvény jelen esetben a háttér kirajzolásáért.
+     * @param g the <code>Graphics</code> object to protect
+     */
     public void paintComponent(Graphics g){
         g.drawImage(bg, 0, 0, this);
     }
+
+    /**
+     * A Gombok nyomásira végzett műveletek lebonyolításáért felelős.
+     */
     public class SerializableButtonListener implements ActionListener{
+        /**
+         * A gomb lenyomására történő taskok lekezelése.
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource().equals(button2)){
@@ -87,14 +112,10 @@ public class MenuPanel extends JPanel {
                 try {
                     serializationUtil.load("game.txt");
                     serializationUtil.getGamePanel().repaint();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                } catch (ClassNotFoundException ex) {
-                    throw new RuntimeException(ex);
+                } catch (Exception ex) {
+                    System.out.println("A megadott file-ból nem lehet beolvasni.");
                 }
             }
         }
     }
-
-
 }

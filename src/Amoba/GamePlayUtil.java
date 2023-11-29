@@ -3,11 +3,18 @@ package Amoba;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * A játék szabályok betartását ellenőrzi.
+ */
 public class GamePlayUtil {
-    private GamePanel gamePanel;
-    GamePlayUtil(GamePanel gp){
-        gamePanel = gp;
-    }
+    /**
+     * Az adott ponttól vett minden iránybeli bizonyos elemszámú vonalakat ellenőrzi.
+     * @param table a tábla ami az aktuális kövek helyzetét tárolja.
+     * @param idx index amire kiértékeljük a feltételeket.
+     * @param player a játékos akire ellenőrizzük a feltételeket.
+     * @param num a vonalak elem száma, hány elem hosszú vonal.
+     * @return a feltételeknek megfelelő vonalak kezdő és végső pozíciója tömbösítve.
+     */
     public ArrayList<ArrayList<Integer>> checkMultipleLines(int [][] table, Point idx, int player, int num){
         ArrayList<ArrayList<Integer>> result = new ArrayList<>();
         ArrayList<Integer> temp = checkVerticalLine(table, idx, player, num);
@@ -20,7 +27,12 @@ public class GamePlayUtil {
             result.add(temp);
         }
 
-        temp = checkCrossLines(table, idx, player, num);
+        temp = checkCrossLine(table, idx, player, num);
+        if(temp.size()>0){
+            result.add(temp);
+        }
+
+        temp = checkCrossLineInverted(table, idx, player, num);
         if(temp.size()>0){
             result.add(temp);
         }
@@ -28,6 +40,14 @@ public class GamePlayUtil {
         return result;
     }
 
+    /**
+     * Az adott ponttól vett vízszintes irányú bizonyos elemszámú vonalakat ellenőrzi.
+     * @param table a tábla ami az aktuális kövek helyzetét tárolja.
+     * @param idx index amire kiértékeljük a feltételeket.
+     * @param player a játékos akire ellenőrizzük a feltételeket.
+     * @param num a vonalak elem száma, hány elem hosszú vonal.
+     * @return a feltételeknek megfelelő vonal kezdő és végső pozíciója tömbösítve.
+     */
     public ArrayList<Integer> checkHorzontalLine(int [][] table, Point idx, int player, int num){
         //Vizszint
         ArrayList<Integer> result = new ArrayList<>();
@@ -72,6 +92,15 @@ public class GamePlayUtil {
         }
         return result;
     }
+
+    /**
+     * Az adott ponttól vett függőleges irányú bizonyos elemszámú vonalakat ellenőrzi.
+     * @param table a tábla ami az aktuális kövek helyzetét tárolja.
+     * @param idx index amire kiértékeljük a feltételeket.
+     * @param player a játékos akire ellenőrizzük a feltételeket.
+     * @param num a vonalak elem száma, hány elem hosszú vonal.
+     * @return a feltételeknek megfelelő vonal kezdő és végső pozíciója tömbösítve.
+     */
     public ArrayList<Integer> checkVerticalLine(int [][] table, Point idx, int player, int num){
         //Fuggoleges
         ArrayList<Integer> result = new ArrayList<>();
@@ -117,8 +146,16 @@ public class GamePlayUtil {
         }
         return result;
     }
-    public ArrayList<Integer> checkCrossLines(int [][] table, Point idx, int player, int num){
-        //Kereszt 1.
+
+    /**
+     * Az adott ponttól vett ( f(x) = -x ) kereszt irányú bizonyos elemszámú vonalakat ellenőrzi.
+     * @param table a tábla ami az aktuális kövek helyzetét tárolja.
+     * @param idx index amire kiértékeljük a feltételeket.
+     * @param player a játékos akire ellenőrizzük a feltételeket.
+     * @param num a vonalak elem száma, hány elem hosszú vonal.
+     * @return a feltételeknek megfelelő vonal kezdő és végső pozíciója tömbösítve.
+     */
+    public ArrayList<Integer> checkCrossLine(int [][] table, Point idx, int player, int num){
         int posX = idx.x;
         int posY = idx.y;
         ArrayList<Integer> result = new ArrayList<>();
@@ -152,12 +189,25 @@ public class GamePlayUtil {
             result.add(maxCrossStartIdx[1]+num-1);
         }
 
-        //Kereszt 2.
+        return result;
+    }
+    /**
+     * Az adott ponttól vett ( f(x) = x ) kereszt irányú bizonyos elemszámú vonalakat ellenőrzi.
+     * @param table a tábla ami az aktuális kövek helyzetét tárolja.
+     * @param idx index amire kiértékeljük a feltételeket.
+     * @param player a játékos akire ellenőrizzük a feltételeket.
+     * @param num a vonalak elem száma, hány elem hosszú vonal.
+     * @return a feltételeknek megfelelő vonal kezdő és végső pozíciója tömbösítve.
+     */
+    public ArrayList<Integer> checkCrossLineInverted(int [][] table, Point idx, int player, int num){
+        int posX = idx.x;
+        int posY = idx.y;
+        ArrayList<Integer> result = new ArrayList<>();
 
-        maxCross = 0;
-        maxCrossStartIdx = new int[2];
-        db = 0;
-        int dbStartIdx = -1;
+        int maxCross = 0;
+        int[] maxCrossStartIdx = new int[2];
+        int db = 0;
+        int[] dbCrossStartIdx = new int[2];
         for (int i = -num+1 ; i<num ; i++){
             if(posY-i >= 0 && posY-i < 15 && posX+i >= 0 && posX+i < 15){
                 if(table[posY-i][posX+i] == player){
@@ -176,7 +226,7 @@ public class GamePlayUtil {
             }
         }
 
-        if(maxCross >= 5){
+        if(maxCross >= num){
             result.add(maxCrossStartIdx[0]);
             result.add(maxCrossStartIdx[1]);
             result.add(maxCrossStartIdx[0]+(num-1));

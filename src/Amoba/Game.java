@@ -4,6 +4,10 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Ez az osztály kezeli a játékot, ez végez minden háttérfolyamatot.
+ * @author Balogh Barnabás
+ */
 public class Game implements Serializable {
     private int moveCount = 1;
     private int player = 1;
@@ -15,12 +19,26 @@ public class Game implements Serializable {
     Game(){
 
     }
+
+    /**
+     * GamePanel setter-e.
+     * @param gamePanel
+     */
     public void setGamePanel(GamePanel gamePanel){
         this.gamePanel = gamePanel;
     }
+
+    /**
+     * GamePanel getter-e.
+     * @return
+     */
     public GamePanel getGamePanel(){
         return gamePanel;
     }
+
+    /**
+     * Alaphelyzetbe állítja a Játékot.
+     */
     public void reset(){
         player = 1;
         moveCount = 1;
@@ -30,9 +48,15 @@ public class Game implements Serializable {
         gamePanel.setDrawList(new ArrayList<ArrayList<Integer>>());
         gamePanel.repaint();
     }
+
+    /**
+     * Lehelyezi a bábut a megadott pozícióra a GamePanelen és hozzáadja a háttérben lévő táblához.
+     * @param pos a pozíció ahová helyezni szeretnénk a kővet.
+     * @throws GameEndException
+     */
     public void lep(Point pos) throws GameEndException {
         if(!gameEnded && checkStonePos(pos) && !checkTaken(pos)) {
-            GamePlayUtil gamePlayUtil = new GamePlayUtil(gamePanel);
+            GamePlayUtil gamePlayUtil = new GamePlayUtil();
             if(moveCount > 4 || moveCount == 3){
                 player = player==1 ? 2 : 1;
             }
@@ -70,6 +94,12 @@ public class Game implements Serializable {
             moveCount++;
         }
     }
+
+    /**
+     * Leellenőrzni, hogy a megadott pozíción van-e már bábu.
+     * @param pos a pozíció amit ellenőrizni szeretnénk.
+     * @return igaz vagy hamis attól függően, hogy foglalt-e vagy sem.
+     */
     public boolean checkTaken(Point pos){
         pos = fixStonePos(pos);
         pos = posToIntArray(pos);
@@ -78,6 +108,12 @@ public class Game implements Serializable {
         }
         return true;
     }
+
+    /**
+     * A négyzetrácsra igazítja a megadott pozíciót.
+     * @param pos
+     * @return négyzetrácsra igazított pozíció.
+     */
     public Point fixStonePos(Point pos){
         int modX = pos.x % 30;
         int modY = pos.y % 30;
@@ -99,6 +135,11 @@ public class Game implements Serializable {
         return pos;
     }
 
+    /**
+     * Ellenőrzi, hogy az adott határon belül adtunk-e meg neki értéket.
+     * @param pos
+     * @return igaz vagy hamis attól függően, hogy bele esik-e az adott határba.
+     */
     public boolean checkStonePos(Point pos){
         int stonePosX = pos.x;
         int stonePosY = pos.y;
@@ -110,6 +151,12 @@ public class Game implements Serializable {
         }
         return true;
     }
+
+    /**
+     * A megadott koordinátát alakítja át a háttérben lévő tábla indexeivé.
+     * @param pos
+     * @return tábla indexei.
+     */
     public Point posToIntArray(Point pos){
         pos = fixStonePos(pos);
         int x = (pos.x-90) / 30;
@@ -117,19 +164,19 @@ public class Game implements Serializable {
 
         return new Point(x, y);
     }
-    public void print(){
-        for(int i = 0;i < 15;i++){
-            for(int k = 0;k < 15;k++){
-                System.out.print(table[i][k]);
-            }
-            System.out.println();
-        }
-    }
 
+    /**
+     * Stones getter-e.
+     * @return
+     */
     public Stone[][] getStones(){
         return stones;
     }
 
+    /**
+     * Stones setter-e.
+     * @return
+     */
     public int[][] getTable() {
         return table;
     }

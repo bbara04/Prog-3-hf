@@ -9,6 +9,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * A játék grafikus megjelenítéséért felelős osztály.
+ * @author Balogh Barnabás
+ */
 public class GamePanel extends JPanel{
     private Game game;
     private ArrayList<ArrayList<Integer>> drawList = new ArrayList<>();
@@ -19,17 +23,34 @@ public class GamePanel extends JPanel{
         addMouseListener(new GameMouseListener());
     }
 
+    /**
+     * DrawList setter-e.
+     * @param drawList
+     */
     public void setDrawList(ArrayList<ArrayList<Integer>> drawList) {
         this.drawList = drawList;
     }
 
+    /**
+     * Game setter-e.
+     * @param g
+     */
     public void setGame(Game g){
         game = g;
     }
+
+    /**
+     * Game getter-e.
+     * @return
+     */
     public Game getGame(){
         return game;
     }
 
+    /**
+     * A játék elemit rajzolja ki.
+     * @param g the <code>Graphics</code> object to protect
+     */
     public void paintComponent(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
         super.paintComponent(g);
@@ -92,12 +113,24 @@ public class GamePanel extends JPanel{
             }
         }
     }
+
+    /**
+     * A játék végetértekor hívodik meg, ez végzi a játék végének lebonyolítását.
+     * @param text az oka ami, miatt végetért a játék.
+     */
     public void EndGameHandler(String text){
         paintComponent(getGraphics());
         JOptionPane.showMessageDialog(null, text, "Játék vége", JOptionPane.YES_NO_OPTION);
     }
 
+    /**
+     * Az egér pozíciójának és gombnyomásira végzett műveletek lebonyolításáért felelős.
+     */
     public class GameMouseListener implements MouseListener {
+        /**
+         * Az egér klikkelésére történő taskok lekezelése.
+         * @param e the event to be processed
+         */
         @Override
         public void mouseClicked(MouseEvent e) {
             try{
