@@ -1,5 +1,6 @@
 package Amoba;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class GamePlayUtil {
@@ -7,32 +8,43 @@ public class GamePlayUtil {
     GamePlayUtil(GamePanel gp){
         gamePanel = gp;
     }
-    public ArrayList<ArrayList<Integer>> checkWin(int [][] table, int[] idx, int player, int num){
+    public ArrayList<ArrayList<Integer>> checkMultipleLines(int [][] table, Point idx, int player, int num){
         ArrayList<ArrayList<Integer>> result = new ArrayList<>();
-         result.add(checkVertical(table, idx, player, num));
-         result.add(checkHorzontal(table, idx, player, num));
-         result.add(checkCross(table, idx, player, num));
+        ArrayList<Integer> temp = checkVerticalLine(table, idx, player, num);
+        if(temp.size()>0){
+            result.add(temp);
+        }
+
+        temp = checkHorzontalLine(table, idx, player, num);
+        if(temp.size()>0){
+            result.add(temp);
+        }
+
+        temp = checkCrossLines(table, idx, player, num);
+        if(temp.size()>0){
+            result.add(temp);
+        }
 
         return result;
     }
 
-    public ArrayList<Integer> checkHorzontal(int [][] table, int[] idx, int player, int num){
+    public ArrayList<Integer> checkHorzontalLine(int [][] table, Point idx, int player, int num){
         //Vizszint
         ArrayList<Integer> result = new ArrayList<>();
         int bound = num-1;
         int upperBoundX, downerBoundX;
-        if(idx[0]-bound < 0){
+        if(idx.x-bound < 0){
             downerBoundX = 0;
         } else {
-            downerBoundX = idx[0] - bound;
+            downerBoundX = idx.x - bound;
         }
-        if(idx[0]+bound >= 15){
+        if(idx.x+bound >= 15){
             upperBoundX = 14;
         } else {
-            upperBoundX = idx[0] + bound;
+            upperBoundX = idx.x + bound;
         }
 
-        int posY = idx[1];
+        int posY = idx.y;
         int maxX = 0;
         int maxXStartIdx = -1;
         int db = 0;
@@ -53,7 +65,6 @@ public class GamePlayUtil {
         }
 
         if(maxX >= num){
-            System.out.println(maxXStartIdx+ "," + posY + " " + (maxXStartIdx + maxX-1) + "," + posY);
             result.add(maxXStartIdx);
             result.add(posY);
             result.add(maxXStartIdx+bound);
@@ -61,24 +72,24 @@ public class GamePlayUtil {
         }
         return result;
     }
-    public ArrayList<Integer> checkVertical(int [][] table, int[] idx, int player, int num){
+    public ArrayList<Integer> checkVerticalLine(int [][] table, Point idx, int player, int num){
         //Fuggoleges
         ArrayList<Integer> result = new ArrayList<>();
         int bound = num-1;
         int upperBoundY, downerBoundY;
 
-        if(idx[1]-bound < 0){
+        if(idx.y-bound < 0){
             downerBoundY = 0;
         } else {
-            downerBoundY = idx[1] - bound;
+            downerBoundY = idx.y - bound;
         }
-        if(idx[1]+bound >= 15){
+        if(idx.y+bound >= 15){
             upperBoundY = 14;
         } else {
-            upperBoundY = idx[1] + bound;
+            upperBoundY = idx.y + bound;
         }
 
-        int posX = idx[0];
+        int posX = idx.x;
         int maxY = 0;
         int maxYStartIdx = -1;
         int db = 0;
@@ -99,7 +110,6 @@ public class GamePlayUtil {
         }
 
         if(maxY >= num){
-            System.out.println(maxYStartIdx+ "," + posX + " " + (maxYStartIdx + bound) + "," + posX);
             result.add(posX);
             result.add(maxYStartIdx);
             result.add(posX);
@@ -107,10 +117,10 @@ public class GamePlayUtil {
         }
         return result;
     }
-    public ArrayList<Integer> checkCross(int [][] table, int[] idx, int player, int num){
+    public ArrayList<Integer> checkCrossLines(int [][] table, Point idx, int player, int num){
         //Kereszt 1.
-        int posX = idx[0];
-        int posY = idx[1];
+        int posX = idx.x;
+        int posY = idx.y;
         ArrayList<Integer> result = new ArrayList<>();
 
         int[] dbCrossStartIdx = new int[2];
@@ -136,7 +146,6 @@ public class GamePlayUtil {
         }
 
         if(maxCross >= num){
-            System.out.println(maxCrossStartIdx[0] + "," + maxCrossStartIdx[1] + " " + (maxCrossStartIdx[0] + 4) + "," + (maxCrossStartIdx[1]+4));
             result.add(maxCrossStartIdx[0]);
             result.add(maxCrossStartIdx[1]);
             result.add(maxCrossStartIdx[0]+num-1);
@@ -168,7 +177,6 @@ public class GamePlayUtil {
         }
 
         if(maxCross >= 5){
-            System.out.println(maxCrossStartIdx[0] + "," + maxCrossStartIdx[1] + " " + (maxCrossStartIdx[0] + 4) + "," + (maxCrossStartIdx[1]-4));
             result.add(maxCrossStartIdx[0]);
             result.add(maxCrossStartIdx[1]);
             result.add(maxCrossStartIdx[0]+(num-1));

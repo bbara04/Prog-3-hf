@@ -3,6 +3,8 @@ package Amoba;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -10,9 +12,12 @@ public class HomePagePanel extends JPanel {
     private JButton button1;
     private JButton button2;
     private JButton button3;
-    Image bg;
-    HomePagePanel() {
+    private Image bg;
+    private SerializationUtil serializationUtil;
+    private MainFrame mainFrame;
+    HomePagePanel(MainFrame mainFrame) {
         super();
+        this.mainFrame = mainFrame;
         setLayout(new FlowLayout(FlowLayout.CENTER, 70, 250));
         setPreferredSize(new Dimension(900, 600));
         try {

@@ -13,7 +13,7 @@ public class MainFrame extends JFrame {
 
     MainFrame() {
         super();
-        homePagePanel = new HomePagePanel();
+        homePagePanel = new HomePagePanel(this);
         add(homePagePanel);
         homePagePanel.getNewGameButton().addActionListener(x -> {
             this.getContentPane().removeAll();
@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
         homePagePanel.getLoadGameButton().addActionListener(x -> {
             this.getContentPane().removeAll();
             try {
-                serializationUtil.load("game1.txt");
+                serializationUtil.load("game.txt");
             } catch (IOException e) {
             } catch (ClassNotFoundException e) {
             }
@@ -37,7 +37,6 @@ public class MainFrame extends JFrame {
         frame.setPreferredSize(new Dimension(900, 600));
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //add(frame);
         this.revalidate();
         setVisible(true);
         setResizable(false);
@@ -53,6 +52,11 @@ public class MainFrame extends JFrame {
         menuPanel = new MenuPanel();
         menuPanel.setSerializationUtil(serializationUtil);
         frame.add(menuPanel, BorderLayout.EAST);
+    }
+    public void changeToGameFrame(){
+        this.getContentPane().removeAll();
+        this.add(frame);
+        revalidate();
     }
 
     public static void main(String[] args) {

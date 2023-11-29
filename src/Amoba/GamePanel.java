@@ -10,12 +10,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel{
-    Game game;
-    ArrayList<ArrayList<Integer>> drawList = new ArrayList<>();
+    private Game game;
+    private ArrayList<ArrayList<Integer>> drawList = new ArrayList<>();
     GamePanel(Game game){
         super();
         this.game = game;
-        setBackground(new Color(186, 142, 101));
         setSize(new Dimension(600, 600));
         addMouseListener(new GameMouseListener());
     }
@@ -35,6 +34,14 @@ public class GamePanel extends JPanel{
         Graphics2D g2d = (Graphics2D) g;
         super.paintComponent(g);
 
+        try {
+            Image bg;
+            bg = ImageIO.read(new File("woodtexture.jpg"));
+            g2d.drawImage(bg, 0, 0, this);
+        } catch (IOException e) {
+            setBackground(new Color(186, 142, 101));
+        }
+
         g2d.setColor(Color.BLACK);
         g2d.setStroke(new BasicStroke(2));
 
@@ -44,6 +51,25 @@ public class GamePanel extends JPanel{
         for(int i = 0; i<15; i++){
             g2d.drawLine(90, i*30+90, 510, i*30+90);
         }
+
+        Font font = new Font("Ariel", Font.BOLD, 18);
+        g2d.setFont(font);
+        FontMetrics metrics = g.getFontMetrics(font);
+        String letters = new String("ABCDEFGHIJKLMNO");
+        int db = 0;
+        for(int i = 90;i<=510;i+=30){
+            int x = i - (metrics.stringWidth(String.valueOf(letters.charAt(db)))/2);
+            g2d.drawString(String.valueOf(letters.charAt(db++)), x, 70);
+        }
+        db = 1;
+        for(int i = 95; i<=520;i+=30){
+            if(db>=10){
+                g2d.drawString(String.valueOf(db++), 50, i);
+            } else {
+                g2d.drawString(String.valueOf(db++), 60, i);
+            }
+        }
+
         for (Stone[] line : game.getStones()){
             for (Stone stone : line){
                 if(stone != null){
@@ -52,25 +78,33 @@ public class GamePanel extends JPanel{
                 }
             }
         }
-        for (ArrayList<Integer> coords : drawList){
-            for(int i = 0;i<coords.size();i+=4){
-                int x1 = (coords.get(i)*30)+90;
-                int y1 = (coords.get(i+1)*30)+90;
-                int x2 = (coords.get(i+2)*30)+90;
-                int y2 = (coords.get(i+3)*30)+90;
-                g2d.setStroke(new BasicStroke(5));
-                g2d.setColor(Color.GREEN);
-                System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
-                g2d.drawLine(x1, y1, x2, y2);
+        if(!drawList.isEmpty()){
+            for (ArrayList<Integer> coords : drawList){
+                for(int i = 0;i<coords.size();i+=4){
+                    int x1 = (coords.get(i)*30)+90;
+                    int y1 = (coords.get(i+1)*30)+90;
+                    int x2 = (coords.get(i+2)*30)+90;
+                    int y2 = (coords.get(i+3)*30)+90;
+                    g2d.setStroke(new BasicStroke(5));
+                    g2d.setColor(Color.GREEN);
+                    g2d.drawLine(x1, y1, x2, y2);
+                }
             }
         }
+    }
+    public void EndGameHandler(String text){
+        paintComponent(getGraphics());
+        JOptionPane.showMessageDialog(null, text, "Játék vége", JOptionPane.YES_NO_OPTION);
     }
 
     public class GameMouseListener implements MouseListener {
         @Override
         public void mouseClicked(MouseEvent e) {
-            //System.out.println(e.getX() + " " + e.getY());
-            game.lep(e.getX(), e.getY());
+            try{
+                game.lep(new Point(e.getX(), e.getY()));
+            } catch (GameEndException exception){
+                EndGameHandler(exception.getText());
+            }
             repaint();
         }
 
