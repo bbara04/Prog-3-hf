@@ -100,14 +100,14 @@ public class GamePanel extends JPanel{
             }
         }
         if(!drawList.isEmpty()){
+            g2d.setStroke(new BasicStroke(5));
+            g2d.setColor(Color.YELLOW);
             for (ArrayList<Integer> coords : drawList){
                 for(int i = 0;i<coords.size();i+=4){
                     int x1 = (coords.get(i)*30)+90;
                     int y1 = (coords.get(i+1)*30)+90;
                     int x2 = (coords.get(i+2)*30)+90;
                     int y2 = (coords.get(i+3)*30)+90;
-                    g2d.setStroke(new BasicStroke(5));
-                    g2d.setColor(Color.GREEN);
                     g2d.drawLine(x1, y1, x2, y2);
                 }
             }

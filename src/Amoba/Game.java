@@ -3,6 +3,7 @@ package Amoba;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Ez az osztály kezeli a játékot, ez végez minden háttérfolyamatot.
@@ -67,17 +68,14 @@ public class Game implements Serializable {
             stones[idx.y][idx.x] = stone;
             table[idx.y][idx.x] = player;
             String tempPlayer = player == 2 ? "Fehér" : "Fekete";
+            if (Arrays.stream(table).flatMapToInt(Arrays::stream).noneMatch(x -> x == 0)) {
+                throw new GameEndException("Döntetlen", "", "nincsen több szabad hely a pályán");
+            }
             ArrayList<ArrayList<Integer>> drawingList = gamePlayUtil.checkMultipleLines(table, idx, player, 6);
             if (!drawingList.isEmpty() && player==1) {
                 gamePanel.setDrawList(drawingList);
                 gameEnded = true;
                 throw new GameEndException("vesztett" ,tempPlayer, "kirakott egymás után 6 követ.");
-            }
-            drawingList = gamePlayUtil.checkMultipleLines(table, idx, player, 5);
-            if (!drawingList.isEmpty()) {
-                gamePanel.setDrawList(drawingList);
-                gameEnded = true;
-                throw new GameEndException("nyert" ,tempPlayer, "kirakott egymás után 5 követ.");
             }
             drawingList = gamePlayUtil.checkMultipleLines(table, idx, player, 3);
             if (drawingList.size() >= 2 && player == 1) {
@@ -90,6 +88,12 @@ public class Game implements Serializable {
                 gamePanel.setDrawList(drawingList);
                 gameEnded = true;
                 throw new GameEndException("vesztett", tempPlayer, "dupla 4-est rakott ki.");
+            }
+            drawingList = gamePlayUtil.checkMultipleLines(table, idx, player, 5);
+            if (!drawingList.isEmpty()) {
+                gamePanel.setDrawList(drawingList);
+                gameEnded = true;
+                throw new GameEndException("nyert" ,tempPlayer, "kirakott egymás után 5 követ.");
             }
             moveCount++;
         }

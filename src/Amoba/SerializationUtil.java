@@ -1,6 +1,7 @@
 package Amoba;
 
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * A Game osztály szerializációjáért felelős osztály, ez végzi az osztály kiírását és beolvasását.
@@ -39,6 +40,7 @@ public class SerializationUtil {
         game = (Game) o;
         game.setGamePanel(gamePanel);
         gamePanel.setGame(game);
+        gamePanel.setDrawList(new ArrayList<ArrayList<Integer>>());
         return o;
     }
 
